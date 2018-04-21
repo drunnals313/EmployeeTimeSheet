@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Time Sheet</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+        <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    </head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            Employee Data Management
+        </div>
+        <div class="form">
+            <form id="search-form">
+                <p>
+                    Add Employee
+                </p>
+                <div class="form-row">
+                    <label for="employee-name">Employee Name:</label>
+                </div>
+                <input type="text" id="employee-name"><br>
+                <div class="form-row">
+                    <label for="employee-role">Role:</label>
+                </div>
+                <input type="text" id="employee-role"><br>
+                <div class="form-row">
+                    <label for="employee-start">Start Date (DD/MM/YY)</label>
+                </div>
+                <input type="text" id="employee-start"><br>
+                <div class="form-row">
+                    <label for="employee-rate">Monthly Rate</label>
+                </div>
+                <input type="text" id="employee-rate"><br>
+                <div class="form-row">
+                    <button id="submit" class="btn btn-primary" type="submit" value="Search">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Current Employees</div>
+            <table class="table" id="display">
+                    <tr>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">Months Worked</th>
+                        <th scope="col">Monthly Rate ($)</th>
+                        <th scope="col">Total Billed ($)</th>
+                    </tr>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var config = {
+            apiKey: "AIzaSyB2gLxAkAOMbOpy7Rk_W100EP6TqL9UzaE",
+            authDomain: "rd-project-97cdd.firebaseapp.com",
+            databaseURL: "https://rd-project-97cdd.firebaseio.com",
+            projectId: "rd-project-97cdd",
+            storageBucket: "rd-project-97cdd.appspot.com",
+            messagingSenderId: "1021154473062"
+        };
+
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        var name = "";
+        var role = "";
+        var beginDate;
+        var rate = "";
+        var dateAdded = "";
+
+        database.ref().on("child_added", function(childSnapshot) {
+            name = childSnapshot.val().name;
+            role = childSnapshot.val().role;
+            beginDate = childSnapshot.val().beginDate;
+            rate = childSnapshot.val().rate;
+            var randomDate = beginDate;
+            var randomFormat = "DD/MM/YY";
+            var convertedDate = moment(randomDate, randomFormat);
+            var months = (-moment(convertedDate).diff(moment(), "months"));
+            var billed = months * rate;
+
+            $("#display").append("<tr><td>" + name + "</td><td>" + role + "</td><td>" + beginDate + "</td><td>" +  months + "</td><td>" + rate + "</td><td>" + billed + "</td>");
+
+        }, function(errorObject) {
+        console.log("The read failed: " + errorObject.code);
+        });
+        
+        $("#submit").on("click", function(event) {
+            console.log("clicked");
+            event.preventDefault();
+            var name = $("#employee-name").val().trim();
+            var role = $("#employee-role").val().trim();
+            var beginDate = $("#employee-start").val().trim();
+            var rate = $("#employee-rate").val().trim();
+            
+            database.ref().push({
+                name: name,
+                role: role,
+                beginDate: beginDate,
+                rate: rate,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+        });
+    </script>
+</body>
+</html>
