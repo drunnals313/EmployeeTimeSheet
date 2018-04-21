@@ -14,8 +14,9 @@
     </head>
 <body>
     <div class="container">
-        <div class="jumbotron">
-            Employee Data Management
+        <div class="jumbotron" style="text-align: center">
+            <h1>Employee Data Management</h1>
+            <h3>A Comprehensive Directory of Employee Billable Hours</h3>
         </div>
         <div class="form">
             <form id="search-form">
@@ -55,8 +56,47 @@
                         <th scope="col">Total Billed ($)</th>
                     </tr>
             </table>
+            <div class="panel-footer" > Copyright @2018 Dave, Corey, Amy <i class="fas fa-handshake"></i>
+            </div> 
         </div>
     </div>
+
+    <style type="text/css">
+    .jumbotron{
+        color: white;
+        background-color: cornflowerblue;
+        padding: 30px;
+        }
+    p{
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .form-row{
+        margin-top: 15px;
+        margin-bottom: 5px;
+    
+    }
+    input{
+        width: 38%;
+    }
+    #submit{
+        background-color: white;
+        color:cornflowerblue;
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }    
+    header{
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .panel-footer{
+        text-align: center;
+        color: white;
+        background-color: cornflowerblue;
+        font-weight: bold;
+    }
+    </style>
     <script type="text/javascript">
         var config = {
             apiKey: "AIzaSyB2gLxAkAOMbOpy7Rk_W100EP6TqL9UzaE",
